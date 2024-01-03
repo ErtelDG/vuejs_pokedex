@@ -1,6 +1,130 @@
 import { createStore } from "vuex";
+import { type Commit } from "vuex";
+import pokemonBaseDataTxt from "./assets/data/pokemonBaseDataTxt.txt";
+import pokemonBaseData from "./assets/data/pokemonBaseData.json";
 
-// global variable who need in the project for all and rendering!
+interface Pokemon {
+   pokemonId: number;
+   pokemonName: string;
+   pokemonImage: string;
+   pokemonType1: string;
+   color: string;
+   pokemonGeneration: string;
+   pokemonWeight: number;
+   pokemonHeight: number;
+   pokemonAbilitie1: string;
+   flavorPokemon: string;
+   pokemonHP: number;
+   pokemonAtk: number;
+   pokemonDef: number;
+   pokemonSatk: number;
+   pokemonSdef: number;
+   pokemonSpd: number;
+   pokemonType2?: string;
+   pokemonAbilitie2?: string;
+   pokemonColor2?: string;
+}
+
+// define variables
+const state = {
+   currentGeneration: "generation-i",
+   localPokemonsData: JSON,
+
+   generations: [
+      "generation-i",
+      "generation-ii",
+      "generation-iii",
+      "generation-iv",
+      "generation-v",
+      "generation-vi",
+      "generation-vii",
+      "generation-viii",
+      "generation-ix",
+   ],
+   currentPokemon: 1,
+   intermediateValue: 181,
+   maxPokemons: 905,
+   generation1: {},
+   generation2: {},
+   generation3: {},
+   generation4: {},
+   generation5: {},
+   generation6: {},
+   generation7: {},
+   generation8: {},
+   generation9: {},
+   searchAllPokemonsArray: [] as string[],
+   type2: "undefined",
+   abilities2: "undefined",
+   color2: "undefined",
+   url1: "https://pokeapi.co/api/v2/pokemon/",
+   url2: "https://pokeapi.co/api/v2/pokemon-species/",
+   url1responseCurrentPokemonAsJson: null,
+   url2responseCurrentPokemonAsJson: null,
+   found: true,
+   counterRequestFailToApi: 0,
+
+   containerRenderAllPokemonSmall: null, // Setze dies auf den gewünschten Standardwert
+   pokemonsSearchId: null, // Setze dies auf den gewünschten Standardwert
+   PokemonCard: null, // Setze dies auf den gewünschten Standardwert
+   PokemonCardBaseData: null, // Setze dies auf den gewünschten Standardwert
+   colorCodes: [
+      ["rock", "#B69E31"],
+      ["ghost", "#70559B"],
+      ["steel", "#B7B9D0"],
+      ["water", "#6493EB"],
+      ["grass", "#74CB48"],
+      ["psychic", "#FB5584"],
+      ["ice", "#9AD6DF"],
+      ["dark", "#75574C"],
+      ["fairy", "#E69EAC"],
+      ["normal", "#AAA67F"],
+      ["fighting", "#C12239"],
+      ["flying", "#A891EC"],
+      ["poison", "#A43E9E"],
+      ["ground", "#DEC16B"],
+      ["bug", "#A7B723"],
+      ["fire", "#F57D31"],
+      ["electric", "#F9CF30"],
+      ["dragon", "#7037FF"],
+      ["default", "#000000"],
+   ],
+};
+
+// Define getters, mutations, and actions
+const getters = {
+   /* ... */
+};
+const mutations = {
+   updateCurrentGeneration(state: { currentGeneration: string }, newGeneration: string) {
+      state.currentGeneration = newGeneration;
+   },
+
+   sortPokemons(state: { localPokemonsData: any }, sortBy: string) {
+      const sortFunction = sortBy === "name" ? (a: any, b: any) => a.pokemonName.localeCompare(b.pokemonName) : (a: any, b: any) => a.pokemonId - b.pokemonId;
+
+      state.localPokemonsData = Object.values(state.localPokemonsData).sort(sortFunction);
+   },
+};
+const actions = {
+   updateCurrentGeneration({ commit }: { commit: Commit }, newGeneration: string) {
+      commit("updateCurrentGeneration", newGeneration);
+   },
+   sortPokemons({ commit }: { commit: Commit }, sortBy: string) {
+      commit("sortPokemons", sortBy);
+   },
+};
+
+// Create and export store
+export default createStore({
+   state,
+   getters,
+   mutations,
+   actions,
+   // Additional modules can be added here
+});
+
+/* // global variable who need in the project for all and rendering!
 let currentPokemon: number = 1;
 let intermediateValue: number = 181;
 let maxPokemons: number = 905;
@@ -38,8 +162,8 @@ let localPokemonsData: any = {};
 //contain for small pokemon cards
 let containerRenderAllPokemonSmall = document.getElementById("renderAllPokemonSmall");
 let pokemonsSearchId = document.getElementById("pokemonsSearchId");
-
-// pokemon class
+ */
+/* // pokemon class
 class PokemonCard {
    pokemonId!: number;
    pokemonName!: string;
@@ -119,9 +243,9 @@ class PokemonCardBaseData {
       this.color = color;
       this.pokemonGeneration = pokemonGeneration;
    }
-}
+} */
 
-let colorCodes = [
+/* let colorCodes = [
    ["rock", "#B69E31"],
    ["ghost", "#70559B"],
    ["steel", "#B7B9D0"],
@@ -141,60 +265,4 @@ let colorCodes = [
    ["electric", "#F9CF30"],
    ["dragon", "#7037FF"],
    ["default", "#000000"],
-];
-
-// define variables
-const state = {
-   currentPokemon,
-   intermediateValue,
-   maxPokemons,
-   generation1,
-   generation2,
-   generation3,
-   generation4,
-   generation5,
-   generation6,
-   generation7,
-   generation8,
-   generation9,
-   searchAllPokemonsArray,
-   type2,
-   abilities2,
-   color2,
-   url1,
-   url2,
-   url1responseCurrentPokemonAsJson,
-   url2responseCurrentPokemonAsJson,
-   found,
-   counterRequestFailToApi,
-   localPokemonsData,
-   containerRenderAllPokemonSmall,
-   pokemonsSearchId,
-   PokemonCard,
-   PokemonCardBaseData,
-   colorCodes,
-};
-
-// Getter definieren
-const getters = {
-   // Ihre Getter hier
-};
-
-// Mutationen definieren
-const mutations = {
-   // Ihre Mutationen hier
-};
-
-// Aktionen definieren
-const actions = {
-   // Ihre Aktionen hier
-};
-
-// Store erstellen und exportieren
-export default createStore({
-   state,
-   getters,
-   mutations,
-   actions,
-   // Weitere Module können hier hinzugefügt werden
-});
+]; */

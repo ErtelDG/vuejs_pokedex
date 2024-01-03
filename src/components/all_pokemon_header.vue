@@ -1,4 +1,11 @@
 <script setup lang="ts">
+import { useStore } from 'vuex';
+
+const store = useStore()
+
+const sortPokemons = (sortBy: string) => {
+  store.dispatch('sortPokemons', sortBy);
+};
 
 </script>
 
@@ -18,10 +25,10 @@
                         name="sort-id"
                         id="sortIdInline"
                         class="flex items-center border px-2 py-2 w-8 h-8 rounded-md cursor-pointer hover:bg-gray-200"
-                        onclick="renderSmallPokemonCard(1)"
+                        @click="sortPokemons('name')"
                      >
                         <div class="font-semibold text-xxs text-line-xxs text-center text-color-type-dark-gray w-2 h-full flex justify-center items-center">
-                           I D
+                           A Z
                         </div>
                         <div class="h-8 w-8 flex justify-center items-center">
                            <svg width="1rem" height="1rem" viewBox="0 0 9 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -38,10 +45,10 @@
                         name="sort-a-z"
                         id="sortBtnAzInline"
                         class="flex items-center px-2 py-2 w-8 h-8 border rounded-md cursor-pointer hover:bg-gray-200"
-                        onclick="sortPokemonAZ('generation1')"
+                        @click="sortPokemons('id')"
                      >
                         <div class="font-semibold text-xxs text-line-xxs text-center text-color-type-dark-gray w-2 h-full flex justify-center items-center">
-                           A Z
+                           I D
                         </div>
                         <div class="h-8 w-8 flex justify-center items-center">
                            <svg width="1rem" height="1rem" viewBox="0 0 9 16" fill="none" xmlns="http://www.w3.org/2000/svg">
