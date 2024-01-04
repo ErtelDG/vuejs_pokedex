@@ -22,6 +22,14 @@ watch(observeStoreCurrentSelectedGen, () => {
       (pokemon: any) => pokemon.pokemonGeneration === currentGenerationSelected
    );
 });
+
+const selectedBigPokemonCard = (chooice: number) => {
+   store.dispatch("selectedBigPokemonCard", chooice);
+};
+
+function selectPokemon(chooice: number) {
+   selectedBigPokemonCard(chooice);
+}
 </script>
 
 <template>
@@ -32,9 +40,9 @@ watch(observeStoreCurrentSelectedGen, () => {
          v-for="(pokemon, index) in currentGenerationPokemon"
          :name="`${pokemon.pokemonGeneration}-show-pokemon-card`"
          :id="`${pokemon.pokemonId}`"
-         :onclick="`showBigPokemonCard(${pokemon.pokemonId})`"
          class="flex flex-col w-26 h-28 my-2 mx-2 bg-white border border-solid border-r-05rem shadow-s cursor-pointer"
          :style="`border-color: ${pokemon.color}`"
+         @click="() => selectPokemon(pokemon.pokemonId)"
       >
          <div name="pokemon-number" class="w-full h-4 flex justify-end">
             <div name="number-text" class="font-normal text-xxs flex justify-center text-right px-1" :style="`color:${pokemon.color}`">

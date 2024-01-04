@@ -1,6 +1,5 @@
 import { createStore } from "vuex";
 import { type Commit } from "vuex";
-import pokemonBaseDataTxt from "./assets/data/pokemonBaseDataTxt.txt";
 import pokemonBaseData from "./assets/data/pokemonBaseData.json";
 
 interface Pokemon {
@@ -29,6 +28,7 @@ interface Pokemon {
 const state = {
    currentGeneration: "generation-i",
    localPokemonsData: JSON,
+   bigPokemonCard: 0,
 
    generations: [
       "generation-i",
@@ -102,8 +102,11 @@ const mutations = {
 
    sortPokemons(state: { localPokemonsData: any }, sortBy: string) {
       const sortFunction = sortBy === "name" ? (a: any, b: any) => a.pokemonName.localeCompare(b.pokemonName) : (a: any, b: any) => a.pokemonId - b.pokemonId;
-
       state.localPokemonsData = Object.values(state.localPokemonsData).sort(sortFunction);
+   },
+
+   selectedBigPokemonCard(state: { bigPokemonCard: any }, chooice: number) {
+      state.bigPokemonCard = chooice;
    },
 };
 const actions = {
@@ -112,6 +115,9 @@ const actions = {
    },
    sortPokemons({ commit }: { commit: Commit }, sortBy: string) {
       commit("sortPokemons", sortBy);
+   },
+   selectedBigPokemonCard({ commit }: { commit: Commit }, chooice: number) {
+      commit("selectedBigPokemonCard", chooice);
    },
 };
 

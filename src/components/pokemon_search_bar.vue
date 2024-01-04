@@ -1,8 +1,59 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { ref, watch } from "vue";
+import { useStore } from "vuex";
+
+const store = useStore();
+let searchPokemon = ref("");
+
+let renderListPokemon = ref(false);
+let pokemonNames = ref<any[]>([]);
+let userFilterInput = ref<any[]>([]);
+let searchTerm: string;
+
+watch(searchPokemon, () => {
+   searchTerm = searchPokemon.value.toLowerCase();
+   console.log(searchTerm);
+   console.log(pokemonNames.value);
+
+   if (searchTerm != "") {
+      userFilterInput.value = pokemonNames.value
+         .filter((pokemon) => pokemon.name.toLowerCase().includes(searchTerm))
+         .map((pokemon) => ({
+            id: pokemon.id,
+            name: pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1),
+         }));
+      renderListPokemon.value = true;
+   } else {
+      renderListPokemon.value = false;
+      userFilterInput.value = [];
+   }
+});
+
+watch(
+   () => store.state.localPokemonsData,
+   () => {
+      pokemonNames.value = Object.values(store.state.localPokemonsData).map((pokemon: any) => ({
+         id: pokemon.pokemonId, // Annahme: Die Pokemon-ID ist im Datenobjekt als "pokemonID" gespeichert
+         name: pokemon.pokemonName.charAt(0).toUpperCase() + pokemon.pokemonName.slice(1),
+      }));
+   }
+);
+
+function selectPokemon(name: number) {
+   renderListPokemon.value = false;
+   console.log(name);
+   selectedBigPokemonCard(name);
+   searchPokemon.value = "";
+}
+
+const selectedBigPokemonCard = (chooice: number) => {
+   store.dispatch("selectedBigPokemonCard", chooice);
+};
+</script>
 
 <template>
    <div name="pokemon-search-bar" class="flex gap-4 w-82 md:w-2/5 h-8 justify-center bg-white border border-solid border-gray-100 border-r-05rem shadow-sm">
-      <div class="w-full h-full gap-2 flex items-center justify-center ml-2">
+      <div class="w-full h-full gap-2 flex items-center justify-center mx-2">
          <div class="w-4 h-4 flex justify-center items-center">
             <svg width="0.75rem" height="0.75rem" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
                <path
@@ -12,11 +63,16 @@
             </svg>
          </div>
          <!-- pokemon search -->
-         <form autocomplete="off" action="" onsubmit="showBigPokemonCardBySearch(); return false" class="flex w-full h-full" id="searchPokemonForm">
+         <!--  @submit.prevent="showBigPokemonCardBySearch" -->
+         <form autocomplete="off" action="" class="flex w-full h-full" id="searchPokemonForm">
             <div class="autocomplete w-full text-sm">
-               <input class="w-full h-full px-2 text-center" id="myInput" type="text" required name="" placeholder="Search in all Pokemons." />
+               <input v-model="searchPokemon" class="w-full h-full px-2 text-center" id="myInput" type="text" required placeholder="Search in all Pokemons." />
+               <ul v-if="renderListPokemon" class="bg-white border border-solid border-gray-100 border-r-05rem shadow-sm border-l-2 rounded-r">
+                  <li v-for="chooice in userFilterInput" class="p-2 hover:bg-gray-200 cursor-pointer" @click="() => selectPokemon(chooice.id)">
+                     {{ chooice.name }}
+                  </li>
+               </ul>
             </div>
-            <input class="rounded-r px-2 my-0 cursor-pointer border-l-2 bg-white hover:bg-gray-200 text-xs" type="submit" value="Open Card" />
          </form>
       </div>
    </div>
