@@ -27,7 +27,7 @@ onMounted(() => {
          <!-- all pokemon start side  -->
          <all_pokemon_start_side></all_pokemon_start_side>
 
-         <!-- <start_animation></start_animation> -->
+         <start_animation></start_animation>
       </div>
    </div>
 </template>

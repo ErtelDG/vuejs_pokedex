@@ -14,8 +14,6 @@ const extractValueAfterHyphen = (generation: string) => {
 const changeCurrentGeneration = (generation: any) => {
    store.dispatch("updateCurrentGeneration", generation);
 };
-
-watch(currentGeneration, () => console.log(currentGeneration.value));
 </script>
 
 <template>

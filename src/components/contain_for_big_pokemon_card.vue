@@ -21,28 +21,29 @@ watch(chooiceBigCard, async () => {
    if (chooiceBigCard.value > 0) {
       generalDataBigCard.value = store.state.localPokemonsData[chooiceBigCard.value];
       await getPokemonValueByApi(chooiceBigCard.value, urlResponseCurrentPokemonAsJson.value, urlResponseCurrentSpeciesPokemonAsJson.value);
-      console.log("generalDataBigCard ", generalDataBigCard.value);
-      console.log("abilityDataBigCard", abilityDataBigCard.value);
-      console.log("speciesDataBigCard", speciesDataBigCard.value);
    } else {
       generalDataBigCard.value = {};
    }
 });
 
-async function getPokemonValueByApi(pokemonId: number, urlApi1: string, urlApi2: string) {
+async function getPokemonValueByApi(pokemonId: number, urlApi1: string, urlApi2: string): Promise<void> {
    try {
-      let request = await fetch(urlApi1 + pokemonId);
-      let response = await request.json();
-      abilityDataBigCard.value = response;
-      request = await fetch(urlApi2 + pokemonId);
-      response = await request.json();
-      speciesDataBigCard.value = response;
-      baseStat.value = ((100 / 255) * abilityDataBigCard.value.stats[0].base_stat).toString() + "%";
-      atkStat.value = ((100 / 190) * abilityDataBigCard.value.stats[1].base_stat).toString() + "%";
-      defStat.value = ((100 / 230) * abilityDataBigCard.value.stats[2].base_stat).toString() + "%";
-      satkStat.value = ((100 / 194) * abilityDataBigCard.value.stats[3].base_stat).toString() + "%";
-      sdefStat.value = ((100 / 230) * abilityDataBigCard.value.stats[4].base_stat).toString() + "%";
-      spdStat.value = ((100 / 180) * abilityDataBigCard.value.stats[5].base_stat).toString() + "%";
+      const fetchData = async (url: string): Promise<any> => {
+         const response = await fetch(url + pokemonId);
+         return await response.json();
+      };
+
+      abilityDataBigCard.value = await fetchData(urlApi1);
+      speciesDataBigCard.value = await fetchData(urlApi2);
+
+      const calculateStatPercentage = (baseStat: number, divisor: number): string => ((100 / divisor) * baseStat).toString() + "%";
+
+      baseStat.value = calculateStatPercentage(abilityDataBigCard.value.stats[0].base_stat, 255);
+      atkStat.value = calculateStatPercentage(abilityDataBigCard.value.stats[1].base_stat, 190);
+      defStat.value = calculateStatPercentage(abilityDataBigCard.value.stats[2].base_stat, 230);
+      satkStat.value = calculateStatPercentage(abilityDataBigCard.value.stats[3].base_stat, 194);
+      sdefStat.value = calculateStatPercentage(abilityDataBigCard.value.stats[4].base_stat, 230);
+      spdStat.value = calculateStatPercentage(abilityDataBigCard.value.stats[5].base_stat, 180);
    } catch (error) {
       console.error(error);
    }
@@ -52,25 +53,6 @@ const nextBigCard = (chooice: number) => {
    store.dispatch("selectedBigPokemonCard", chooice);
 };
 </script>
-
-<!--  {{ generalDataBigCard["pokemonId"] }}
-      {{ generalDataBigCard["pokemonName"] }}
-      {{ generalDataBigCard["pokemonImage"] }}
-      {{ generalDataBigCard["color"] }}
-      {{ generalDataBigCard["pokemonGeneration"] }}
-      {{ abilityDataBigCard["sprites"]["other"]["official-artwork"]["front_default"] }}
-      {{ abilityDataBigCard["types"][0]["type"]["name"] }}
-      {{ abilityDataBigCard["types"][1]["type"]["name"] }}
-      {{ abilityDataBigCard["abilities"][0]["ability"]["name"] }}
-      {{ abilityDataBigCard["stats"][0]["base_stat"] }}
-      {{ abilityDataBigCard["stats"][1]["base_stat"] }}
-      {{ abilityDataBigCard["stats"][2]["base_stat"] }}
-      {{ abilityDataBigCard["stats"][3]["base_stat"] }}
-      {{ abilityDataBigCard["stats"][4]["base_stat"] }}
-      {{ abilityDataBigCard["stats"][5]["base_stat"] }}
-      {{ abilityDataBigCard["weight"] / 10 }}
-      {{ abilityDataBigCard["height"] / 10 }} 
-      {{ speciesDataBigCard["abilities"][0]["ability"]["name"]}} -->
 
 <template>
    <div

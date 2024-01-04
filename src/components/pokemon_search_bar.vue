@@ -12,9 +12,7 @@ let searchTerm: string;
 
 watch(searchPokemon, () => {
    searchTerm = searchPokemon.value.toLowerCase();
-   console.log(searchTerm);
-   console.log(pokemonNames.value);
-
+  
    if (searchTerm != "") {
       userFilterInput.value = pokemonNames.value
          .filter((pokemon) => pokemon.name.toLowerCase().includes(searchTerm))
@@ -41,7 +39,6 @@ watch(
 
 function selectPokemon(name: number) {
    renderListPokemon.value = false;
-   console.log(name);
    selectedBigPokemonCard(name);
    searchPokemon.value = "";
 }
