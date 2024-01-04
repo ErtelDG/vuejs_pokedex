@@ -1834,5 +1834,5 @@ html {
   column-gap: 1rem;
   flex-wrap: wrap;
   overflow-x: hidden;
-
+  padding-right: 0.75rem;
 }
