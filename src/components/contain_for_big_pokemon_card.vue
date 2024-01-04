@@ -47,6 +47,10 @@ async function getPokemonValueByApi(pokemonId: number, urlApi1: string, urlApi2:
       console.error(error);
    }
 }
+
+const nextBigCard = (chooice: number) => {
+   store.dispatch("selectedBigPokemonCard", chooice);
+};
 </script>
 
 <!--  {{ generalDataBigCard["pokemonId"] }}
@@ -85,7 +89,7 @@ async function getPokemonValueByApi(pokemonId: number, urlApi1: string, urlApi2:
             <div id="pokecard" name="card-pokemon" class="w-90 h-640 relative border-r-075rem" :style="{ backgroundColor: generalDataBigCard.color }">
                <!-- pokemon card name header -->
                <div name="pokemon-card-name-header" class="absolute top-6 left-5 right-5 w-80 h-8 flex items-start p-0 gap-4">
-                  <div name="arrow-left-pokemon-card-name-header" class="w-6 h-8 flex justify-center items-center cursor-pointer" onclick="closeBigCard()">
+                  <div name="arrow-left-pokemon-card-name-header" class="w-6 h-8 flex justify-center items-center cursor-pointer" @click="() => nextBigCard(0)">
                      <!-- pokemon-card-name-header -->
                      <img src="../assets/img/arrowLeft.png" alt="Arrow Left" />
                   </div>
@@ -331,17 +335,16 @@ async function getPokemonValueByApi(pokemonId: number, urlApi1: string, urlApi2:
                      </div>
                   </div>
                   <div class="w-full flex justify-center items-center mb-4">
-                     <div name="closeBtn" class="px-4 border border-solid rounded-md hover:bg-gray-200 cursor-pointer" onclick="closeBigCard()">Close</div>
+                     <div name="closeBtn" class="px-4 border border-solid rounded-md hover:bg-gray-200 cursor-pointer" @click="() => nextBigCard(0)">Close</div>
                   </div>
                </div>
 
                <!-- element which have position absolute -->
                <div
+                  v-if="generalDataBigCard.pokemonId > 1"
                   class="absolute top-48 left-7 cursor-pointer"
                   id="arrow-small-left"
-                  onclick="showBigPokemonCard(${
-               renderBigPokemonCard.pokemonId - 1
-            })"
+                  @click="() => nextBigCard(generalDataBigCard.pokemonId - 1)"
                >
                   <svg width="0.5rem" height="0.875rem" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                      <path
@@ -350,13 +353,7 @@ async function getPokemonValueByApi(pokemonId: number, urlApi1: string, urlApi2:
                      />
                   </svg>
                </div>
-               <div
-                  class="absolute top-48 right-7 cursor-pointer z-10"
-                  id="arrow-small-right"
-                  onclick="showBigPokemonCard(${
-               renderBigPokemonCard.pokemonId + 1
-            })"
-               >
+               <div class="absolute top-48 right-7 cursor-pointer z-10" id="arrow-small-right" @click="() => nextBigCard(generalDataBigCard.pokemonId + 1)">
                   <svg width="0.5rem" height="0.875rem" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                      <path
                         d="M0.772065 0.190708L0.153346 0.809395C0.0069087 0.955833 0.0069087 1.19327 0.153346 1.33974L5.80019 7.00005L0.153346 12.6604C0.0069087 12.8068 0.0069087 13.0442 0.153346 13.1907L0.772065 13.8094C0.918502 13.9559 1.15594 13.9559 1.30241 13.8094L7.8466 7.26524C7.99303 7.1188 7.99303 6.88136 7.8466 6.7349L1.30241 0.190708C1.15594 0.0442391 0.918502 0.0442391 0.772065 0.190708Z"
@@ -385,7 +382,7 @@ async function getPokemonValueByApi(pokemonId: number, urlApi1: string, urlApi2:
    position: absolute;
    width: v-bind("baseStat");
    top: 0px;
-   animation: baseStat 2s linear forwards;
+   animation: baseStat 1s linear forwards;
 }
 @keyframes baseStat {
    from {
@@ -401,7 +398,7 @@ async function getPokemonValueByApi(pokemonId: number, urlApi1: string, urlApi2:
    position: absolute;
    width: v-bind("atkStat");
    top: 0px;
-   animation: atkStat 2s linear;
+   animation: atkStat 1s linear;
 }
 
 @keyframes atkStat {
@@ -418,7 +415,7 @@ async function getPokemonValueByApi(pokemonId: number, urlApi1: string, urlApi2:
    position: absolute;
    width: v-bind("defStat");
    top: 0px;
-   animation: defStat 2s linear;
+   animation: defStat 1s linear;
 }
 
 @keyframes defStat {
@@ -435,7 +432,7 @@ async function getPokemonValueByApi(pokemonId: number, urlApi1: string, urlApi2:
    position: absolute;
    width: v-bind("satkStat");
    top: 0px;
-   animation: satkStat 2s linear;
+   animation: satkStat 1s linear;
 }
 
 @keyframes satkStat {
@@ -452,7 +449,7 @@ async function getPokemonValueByApi(pokemonId: number, urlApi1: string, urlApi2:
    position: absolute;
    width: v-bind("sdefStat");
    top: 0px;
-   animation: sdefStat 2s linear;
+   animation: sdefStat 1s linear;
 }
 
 @keyframes sdefStat {
@@ -469,7 +466,7 @@ async function getPokemonValueByApi(pokemonId: number, urlApi1: string, urlApi2:
    position: absolute;
    width: v-bind("spdStat");
    top: 0px;
-   animation: spdStat 2s linear;
+   animation: spdStat 1s linear;
 }
 
 @keyframes spdStat {
